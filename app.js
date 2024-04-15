@@ -44,6 +44,7 @@ app.get("/", async (req, res) => {
       username: faker.internet.displayName(),
       balance: 10000,
     }
+    console.info('USER:', JSON.stringify(dummyUser))
     await createDummyUser(dummyUser.username, dummyUser.balance, dummyUser.token);
     let hash = await encrypt(PUBLIC_KEY, dummyUser.token);
     const data = {
