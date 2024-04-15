@@ -39,28 +39,19 @@ const PUBLIC_KEY = fs.readFileSync("public.key", "utf-8");
 // DEMONSTRATION PURPOSES ONLY!
 app.get("/", async (req, res) => {
   try {
-    if (req.cookies.hash) {
-      console.log('same user....');
-      const data = {
-        iframeSrc: "https://aviator.gs.tcenter.cloud/",
-        token: req.cookies.hash, // Use the existing hash from the cookie
-      };
-      res.render("index", data);
-    } else {
-      let dummyUser = {
-        token: uuidv4(),
-        username: faker.internet.displayName(),
-        balance: 10000,
-      }
-      await createDummyUser(dummyUser.username, dummyUser.balance, dummyUser.token);
-      let hash = await encrypt(PUBLIC_KEY, dummyUser.token);
-      const data = {
-        iframeSrc: "https://aviator.gs.tcenter.cloud/",
-        token: hash,
-      };
-      res.cookie('hash', hash, { httpOnly: true, sameSite: 'lax' });
-      res.render("index", data);
-    } 
+    let dummyUser = {
+      token: uuidv4(),
+      username: faker.internet.displayName(),
+      balance: 10000,
+    }
+    await createDummyUser(dummyUser.username, dummyUser.balance, dummyUser.token);
+    let hash = await encrypt(PUBLIC_KEY, dummyUser.token);
+    const data = {
+      iframeSrc: "https://aviator.gs.tcenter.cloud/",
+      token: hash,
+    };
+    res.cookie('hash', hash, { httpOnly: true, sameSite: 'lax' });
+    res.render("index", data);
   } catch (error) {
     console.error(error);
     res.status(500)
