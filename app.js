@@ -5,17 +5,23 @@ const app = express();
 const port = 4000;
 const fs = require("fs");
 
-const faker = require('@faker-js/faker').faker;
-const cookieParser = require('cookie-parser');
+const faker = require("@faker-js/faker").faker;
+const cookieParser = require("cookie-parser");
 
 app.use(cookieParser());
 app.set("view engine", "ejs");
 app.use(bodyParser.json());
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require("uuid");
 
-const { verifyToken } = require('./middleware')
+const { verifyToken } = require("./middleware");
 
-const { createDummyUser, db,  getUserByToken, cashIn, cashOut } = require('./database')
+const {
+  createDummyUser,
+  db,
+  getUserByToken,
+  cashIn,
+  cashOut,
+} = require("./database");
 
 async function encrypt(publicKey, message) {
   try {
@@ -35,6 +41,7 @@ async function encrypt(publicKey, message) {
 }
 
 const PUBLIC_KEY = fs.readFileSync("public.key", "utf-8");
+const PROVIDER_ID = "662f553fb0179dbb4e399002";
 
 // DEMONSTRATION PURPOSES ONLY!
 app.get("/", async (req, res) => {
@@ -43,27 +50,33 @@ app.get("/", async (req, res) => {
       token: uuidv4(),
       username: faker.internet.displayName(),
       balance: 10000,
-    }
-    await createDummyUser(dummyUser.username, dummyUser.balance, dummyUser.token);
+    };
+    await createDummyUser(
+      dummyUser.username,
+      dummyUser.balance,
+      dummyUser.token
+    );
     let hash = await encrypt(PUBLIC_KEY, dummyUser.token);
     const data = {
       iframeSrc: "https://aviator.gs.tcenter.cloud/",
       token: hash,
+      providerId: PROVIDER_ID,
     };
-    res.cookie('hash', hash, { httpOnly: true, sameSite: 'lax' });
+    res.cookie("hash", hash, { httpOnly: true, sameSite: "lax" });
+    res.cookie("providerId", PROVIDER_ID, { httpOnly: true, sameSite: "lax" });
     res.render("index", data);
   } catch (error) {
     console.error(error);
-    res.status(500)
+    res.status(500);
   }
 });
 
 app.get("/api/account", verifyToken, (req, res) => {
   try {
     const user = req.user;
-    res.json({ balance: user.balance, username: user.username }); 
+    res.json({ id: user.id, balance: user.balance, username: user.username });
   } catch (error) {
-    res.status(500)
+    res.status(500);
   }
 });
 
@@ -73,11 +86,16 @@ app.post("/api/balance/cash-out", verifyToken, async (req, res) => {
     const { amount } = req.body;
     await cashOut(user.token, amount);
     const updated = await getUserByToken(user.token);
-    res.json({ success: true, balance: updated.balance, username: updated.username }); 
+    res.json({
+      success: true,
+      balance: updated.balance,
+      username: updated.username,
+      id: updated.id,
+    });
   } catch (error) {
-    console.error(error)
-    res.status(400)
-    res.json({ error: true })
+    console.error(error);
+    res.status(400);
+    res.json({ error: true });
   }
 });
 
@@ -87,10 +105,14 @@ app.post("/api/balance/cash-in", verifyToken, async (req, res) => {
     const { amount } = req.body;
     await cashIn(user.token, amount);
     const updated = await getUserByToken(user.token);
-    res.json({ balance: updated.balance, username: updated.username }); 
+    res.json({
+      balance: updated.balance,
+      username: updated.username,
+      id: updated.id,
+    });
   } catch (error) {
-    console.error(error)
-    res.status(500)
+    console.error(error);
+    res.status(500);
   }
 });
 

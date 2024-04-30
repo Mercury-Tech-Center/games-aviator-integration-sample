@@ -24,7 +24,8 @@
 </head>
 
 <body>
-    <iframe src="<%= iframeSrc %>?token=<%= encodeURIComponent(token) %>"></iframe>
+    <% let queryParams = '?token=' + encodeURIComponent(token) + '&providerId=' + encodeURIComponent(providerId); %>
+    <iframe src="<%= iframeSrc + queryParams %>"></iframe>
 </body>
 
 </html>
