@@ -1,12 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <title>Iframe Example</title>
+    <meta charset="UTF-8">
+    <title>Aviator Iframe</title>
+
+    <meta name="viewport"
+        content="width=device-width, height=device-height, viewport-fit=cover, user-scalable=no, initial-scale=1" />
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        iframe {
+            border: none;
+            width: 100dvw;
+            height: 100dvh;
+        }
+    </style>
 </head>
+
 <body>
-  <h1>ინტეგრაციის მაგალითი</h1>
-  <!-- Construct the iframe src with a query string -->
-  <iframe style="width: 100vw; height: 100vh;" src="<%= iframeSrc %>?token=<%= encodeURIComponent(token) %>"></iframe>
+    <% let queryParams = '?token=' + encodeURIComponent(token) + '&providerId=' + encodeURIComponent(providerId); %>
+    <iframe src="<%= iframeSrc + queryParams %>"></iframe>
 </body>
+
 </html>
