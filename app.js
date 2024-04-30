@@ -41,7 +41,7 @@ async function encrypt(publicKey, message) {
 }
 
 const PUBLIC_KEY = fs.readFileSync("public.key", "utf-8");
-const PROVIDER_ID = "662f553fb0179dbb4e399002";
+const PROVIDER_ID = "6630bcc90465718ae3c73ae7";
 
 // DEMONSTRATION PURPOSES ONLY!
 app.get("/", async (req, res) => {
