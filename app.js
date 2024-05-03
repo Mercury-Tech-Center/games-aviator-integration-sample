@@ -51,6 +51,8 @@ app.get("/", async (req, res) => {
       username: faker.internet.displayName(),
       balance: 10000,
     };
+    console.log('GENERATING USER:', dummyUser.token);
+    console.log('DUMMAY USER:', dummyUser.username);
     await createDummyUser(
       dummyUser.username,
       dummyUser.balance,
