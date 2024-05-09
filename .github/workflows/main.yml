@@ -1,0 +1,21 @@
+name: Deploy to ECS
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  deploy:
+    uses: Mercury-Tech-Center/reusable/.github/workflows/stable_games.yml@main
+    with:
+      is_monorepo: false
+      apps: ''
+      github_repo: ${{ github.event.repository.name }}
+      github_branch: ${{ github.ref_name }}
+      aws_region: eu-central-1
+      ecs_cluster_name: crush
+      build_args: ""
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
