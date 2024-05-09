@@ -60,7 +60,7 @@ app.get("/", async (req, res) => {
     );
     let hash = await encrypt(PUBLIC_KEY, dummyUser.token);
     const data = {
-      iframeSrc: "https://aviator.gs.tcenter.cloud",
+      iframeSrc: "https://staging.aviator.studio",
       token: hash,
       providerId: PROVIDER_ID,
     };
