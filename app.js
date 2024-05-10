@@ -49,7 +49,7 @@ app.get("/", async (req, res) => {
     let dummyUser = {
       token: uuidv4(),
       username: faker.internet.displayName(),
-      balance: 10000,
+      balance: 100000,
     };
     console.log('GENERATING USER:', dummyUser.token);
     console.log('DUMMAY USER:', dummyUser.username);
