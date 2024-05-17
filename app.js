@@ -4,9 +4,19 @@ const crypto = require("crypto");
 const app = express();
 const port = 4000;
 const fs = require("fs");
+const dotenv = require("dotenv");
+
+dotenv.config()
 
 const faker = require("@faker-js/faker").faker;
 const cookieParser = require("cookie-parser");
+
+const ENV_FRONT_MAPPING = {
+  local:"http://localhost:5173",
+  dev: "https://dev.aviator.studio",
+  staging: "https://staging.aviator.studio",
+  prod: "",
+};
 
 app.use(cookieParser());
 app.set("view engine", "ejs");
@@ -14,6 +24,13 @@ app.use(bodyParser.json());
 const { v4: uuidv4 } = require("uuid");
 
 const { verifyToken } = require("./middleware");
+
+const APP_ENV = process.env["APP_ENV"];
+const FRONT_URL = APP_ENV
+  ? ENV_FRONT_MAPPING[APP_ENV]
+  : "https://staging.aviator.studio";
+
+
 
 const {
   createDummyUser,
