@@ -30,8 +30,7 @@ const FRONT_URL = APP_ENV
   ? ENV_FRONT_MAPPING[APP_ENV]
   : "https://staging.aviator.studio";
 
-
-
+console.log('FRONT_APP_URL', FRONT_URL);
 const {
   createDummyUser,
   db,
