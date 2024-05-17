@@ -4,9 +4,9 @@ const crypto = require("crypto");
 const app = express();
 const port = 4000;
 const fs = require("fs");
-const dotenv = require("dotenv");
+// const dotenv = require("dotenv");
 
-dotenv.config()
+// dotenv.config()
 
 const faker = require("@faker-js/faker").faker;
 const cookieParser = require("cookie-parser");
@@ -24,6 +24,8 @@ app.use(bodyParser.json());
 const { v4: uuidv4 } = require("uuid");
 
 const { verifyToken } = require("./middleware");
+
+console.log('PROCESS ENV', process.env);
 
 const APP_ENV = process.env["APP_ENV"];
 const FRONT_URL = APP_ENV
