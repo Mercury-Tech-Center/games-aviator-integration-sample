@@ -67,7 +67,7 @@ app.get("/", async (req, res) => {
     );
     let hash = await encrypt(PUBLIC_KEY, dummyUser.token);
     const data = {
-      iframeSrc: "https://staging.aviator.studio",
+      iframeSrc: FRONT_URL,
       token: hash,
       providerId: PROVIDER_ID,
     };
