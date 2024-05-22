@@ -50,13 +50,30 @@ async function encrypt(publicKey, message) {
 const PUBLIC_KEY = fs.readFileSync("public.key", "utf-8");
 const PROVIDER_ID = "6630bcc90465718ae3c73ae7";
 
+// Middleware to introduce a 5-second delay
+function delayMiddleware(req, res, next) {
+  setTimeout(next, 5000);
+}
+
+
+function getBalance(req){
+  try {
+    const balance = req.query['balance'] ? parseFloat(req.query['balance']): 1000;
+    return balance;
+  } catch (error) {
+    return 1000;
+  }
+}
+
 // DEMONSTRATION PURPOSES ONLY!
 app.get("/", async (req, res) => {
   try {
+    const balance = getBalance(req)
+    console.log('BALANCE:', balance);
     let dummyUser = {
       token: uuidv4(),
       username: faker.internet.displayName(),
-      balance: 100000,
+      balance: balance,
     };
     console.log("GENERATING USER:", dummyUser.token);
     console.log("DUMMAY USER:", dummyUser.username);
