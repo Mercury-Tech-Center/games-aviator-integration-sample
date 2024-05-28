@@ -38,7 +38,7 @@ async function encryptMessage(publicKey, message) {
 const payload = {
   // some user id
   userId: '62e70caa-fcb7-4104-bec2-98457b74b638',
-  // Token issue date (Partner computes expiration date)
+  // Token issue date (Partner computes expiration date) Unix timestamp in milliseconds
   iat: new Date().getTime()
 }
 
