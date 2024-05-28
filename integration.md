@@ -1,24 +1,26 @@
 # Aviator Crash Game Integration Sample App
 
-This is a sample Node.js application that demonstrates how to integrate an Aviator crash game on the provider side. The app is built using Express.js and includes basic user creation, token encryption, and balance management functionalities.
-
-This is a sample Node JS application integration example that demonstrates how to integrate an Aviator crash game on the provider side. sample demonstrates basic user token encryption, account, balance management functionalities.
+This guide provides a comprehensive example of integrating an Aviator crash game on the provider side using Node.js and Express.js. It includes basic functionalities such as user creation, token encryption, and balance management.
 
 ## Prerequisites
 
+To integrate the Aviator crash game, you'll need the following:
+
 - Public Key
 - Provider ID
-- Front end application URL
+- Front-end application URL
 
-Credentials are sent by game provider itself.
+These credentials will be provided by the game provider.
 
 ## Installation
 
-Provider specific based on application environment
+The installation process is provider-specific and based on your application environment.
 
 ## Authentication (Partner Side)
 
-Authentication flow requres provider to generate JWT token with user id and iat (issue) date and encrypt it with given public key.
+The authentication flow requires the provider to generate a JWT token with the user ID and issue date (`iat`), and then encrypt it using the given public key.
+
+### Sample Code
 
 ```js
 async function encryptMessage(publicKey, message) {
@@ -38,67 +40,65 @@ async function encryptMessage(publicKey, message) {
     console.error("Encryption failed:", error.message);
   }
 }
+
 const payload = {
-  // user identifier
-  userId: dummyUser.token,
-  // Token issue date
-  iat: new Date().getTime(),
+  userId: dummyUser.token, // User identifier
+  iat: new Date().getTime(), // Token issue date
 };
+
 const jwtToken = jwt.sign(payload, JWT_SECRET);
-const token = await encrypt(PUBLIC_KEY, jwtToken);
+const token = await encryptMessage(PUBLIC_KEY, jwtToken);
 ```
 
-Example Middleware of validating incoming JWT token from game provider side.
-Game provider API expects status code of 403 if authentication fails.
+### Middleware for Validating Incoming JWT Token
 
 ```js
 async function verifyToken(req, res, next) {
   try {
-    // 1. Game provider sends decrypted original JWT back to partner API
     const token = req.headers["authorization"];
     if (!token) {
-      res.status(403);
-      res.json({ error: "AUTHENTICATION_FAILED" });
+      res.status(403).json({ error: "AUTHENTICATION_FAILED" });
       return;
     }
 
-    // 2. Partner Validates JWT (user, expiration)
     const payload = jwt.verify(token, JWT_SECRET);
     const user = await getUserByToken(payload.userId);
     if (!user) {
-      res.status(403);
-      res.json({ error: "AUTHENTICATION_FAILED" });
+      res.status(403).json({ error: "AUTHENTICATION_FAILED" });
       return;
     }
+
     const iat = payload.iat;
     const issueDate = new Date(iat);
     const currentDate = new Date();
-
-    // case. validate issue date compared to current date
     const differenceInTime = currentDate.getTime() - issueDate.getTime();
     const differenceInDays = differenceInTime / (1000 * 3600 * 24);
+
     if (differenceInDays > 2) {
-      res.status(403);
-      res.json({ error: "AUTHENTICATION_FAILED" });
+      res.status(403).json({ error: "AUTHENTICATION_FAILED" });
       return;
     }
+
     req.user = user;
     next();
   } catch (error) {
     console.log("error:", error);
-    res.status(400);
-    res.json({ error: "user not found" });
+    res.status(400).json({ error: "user not found" });
   }
 }
 ```
 
-## Authentication (Game provider Side)
+The game provider API expects a status code of 403 if authentication fails.
 
-Game provider sends decrypted (Using provider private key) JWT token using Authorization header back to partner API url. it expects partner to validate JWT including user and expiration date.
+## Authentication (Game Provider Side)
+
+The game provider sends the decrypted JWT token using the Authorization header back to the partner API URL. The partner is expected to validate the JWT, including the user and expiration date.
 
 ## Loading Application
 
-Once JWT is encrypted on provider api side, we pass generated fronturl,token,providerId,language down to game front end application as query params.
+Once the JWT is encrypted on the provider API side, pass the generated front URL, token, provider ID, and language to the game front-end application as query parameters.
+
+### Sample Code
 
 ```js
 const data = {
@@ -107,6 +107,7 @@ const data = {
   providerId: PROVIDER_ID,
   language: "GE",
 };
+
 res.render("index", data);
 ```
 
@@ -128,14 +129,15 @@ This endpoint retrieves the account details of the authenticated user.
 
 **Response:**
 
-- `id`: User ID.
-- `balance`: User's balance.
-- `username`: User's username.
+- `id`: User ID
+- `balance`: User's balance
+- `username`: User's username
 
-**Status Code:**
-- `200`: for normal success response
+**Status Codes:**
+
+- `200`: Success
 - `403`: Authentication failed
-- `500`: Any other general server exception
+- `500`: Server error
 
 ### `POST /api/balance/cash-out`
 
@@ -147,20 +149,20 @@ This endpoint allows the user to cash out a specified amount from their balance.
 
 **Request Body:**
 
-- `amount`: The amount to cash out.
+- `amount`: The amount to cash out
 
 **Response:**
 
-- `balance`: Updated user balance.
-- `username`: User's username.
-- `id`: User ID.
+- `balance`: Updated user balance
+- `username`: User's username
+- `id`: User ID
 
-**Status Code:**
-- `200`: for normal success response
+**Status Codes:**
+
+- `200`: Success
 - `403`: Authentication failed
-- `400`: User does not have enough funds
-- `500`: Any other general server exception
-
+- `400`: Insufficient funds
+- `500`: Server error
 
 ### `POST /api/balance/cash-in`
 
@@ -172,16 +174,17 @@ This endpoint allows the user to cash in a specified amount to their balance.
 
 **Request Body:**
 
-- `amount`: The amount to cash in.
+- `amount`: The amount to cash in
 
 **Response:**
 
 - `balance`: Updated balance
-- `username`: User's username.
-- `id`: User ID.
+- `username`: User's username
+- `id`: User ID
 
-**Status Code:**
-- `200`: for normal success response
+**Status Codes:**
+
+- `200`: Success
 - `403`: Authentication failed
-- `400`: User does not have enough funds
-- `500`: Any other general server exception
+- `400`: Insufficient funds
+- `500`: Server error
