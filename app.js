@@ -4,10 +4,7 @@ const crypto = require("crypto");
 const app = express();
 const port = 4000;
 const fs = require("fs");
-// const dotenv = require("dotenv");
-
-// dotenv.config()
-
+const jwt = require('jsonwebtoken');
 const faker = require("@faker-js/faker").faker;
 const cookieParser = require("cookie-parser");
 
@@ -16,15 +13,14 @@ app.set("view engine", "ejs");
 app.use(bodyParser.json());
 const { v4: uuidv4 } = require("uuid");
 
-const { verifyToken } = require("./middleware");
+const { verifyToken, JWT_SECRET } = require("./middleware");
 
 const APP_ENV = process.env["APP_ENV"];
-const FRONT_URL = APP_ENV ? APP_ENV : "https://staging.aviator.studio";
+const FRONT_URL = APP_ENV ? APP_ENV : "http://localhost:5173";
 
 console.log("FRONT_APP_URL", FRONT_URL);
 const {
   createDummyUser,
-  db,
   getUserByToken,
   cashIn,
   cashOut,
@@ -82,11 +78,23 @@ app.get("/", async (req, res) => {
       dummyUser.balance,
       dummyUser.token
     );
-    let hash = await encrypt(PUBLIC_KEY, dummyUser.token);
+    // case. pass issue date here
+    const payload = {
+      // user identifier
+      userId: dummyUser.token,
+      // Token issue date
+      iat: new Date().getTime()
+    }
+    console.log('PAYLOAD:', payload)
+    const jwtToken = jwt.sign(payload, JWT_SECRET);
+    console.log('JWT TOKEN', jwtToken);
+    const hash = await encrypt(PUBLIC_KEY,  jwtToken);
+    console.log('HASH', hash)
     const data = {
       iframeSrc: FRONT_URL,
       token: hash,
       providerId: PROVIDER_ID,
+      language:"GE",
     };
     res.cookie("hash", hash, { httpOnly: true, sameSite: "lax" });
     res.cookie("providerId", PROVIDER_ID, {
@@ -117,7 +125,6 @@ app.post("/api/balance/cash-out", verifyToken, async (req, res) => {
     await cashOut(user.token, amount);
     const updated = await getUserByToken(user.token);
     res.json({
-      success: true,
       balance: updated.balance,
       username: updated.username,
       id: updated.id,

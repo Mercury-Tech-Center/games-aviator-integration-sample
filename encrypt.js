@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-
+const jwt = require('jsonwebtoken');
 // Public key provided
 const PUBLIC_KEY = `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAq4wrR0Gol1EpCLfqJUhL
@@ -30,7 +30,15 @@ async function encryptMessage(publicKey, message) {
   }
 }
 
-// Sample message to encrypt
-const message = "Hello, World!";
+// Example
+const payload = {
+  // user identifier
+  userId: '62e70caa-fcb7-4104-bec2-98457b74b638',
+  // Token issue date
+  iat: new Date().getTime()
+}
 
-encryptMessage(PUBLIC_KEY, message);
+const jwtToken = jwt.sign(payload, "APP_SECRET");
+encryptMessage(PUBLIC_KEY, jwtToken).then((token) => {
+  console.log('TOKEN:', token);
+})
