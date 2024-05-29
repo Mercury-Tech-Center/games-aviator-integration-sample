@@ -26,6 +26,8 @@ const {
   cashOut,
 } = require("./database");
 
+// updated.
+
 async function encrypt(publicKey, message) {
   try {
     const bufferMessage = Buffer.from(message, "utf8");
