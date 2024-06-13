@@ -96,7 +96,7 @@ The game provider sends the decrypted JWT token using the Authorization header b
 
 ## Loading Application
 
-Once the JWT is encrypted on the provider API side, pass the generated front URL, token, provider ID, and language to the game front-end application as query parameters.
+Once the JWT is encrypted on the provider API side, pass the generated front URL, token, provider ID, language, gameId to the game front-end application as query parameters.
 
 ### Sample Code
 
@@ -106,13 +106,15 @@ const data = {
   token: hash,
   providerId: PROVIDER_ID,
   language: "GE",
+  currency:"GEL",
+  gameId: 1
 };
 
 res.render("index", data);
 ```
 
 ```html
-<% let queryParams = '?token=' + encodeURIComponent(token) + '&providerId=' +
+<% let queryParams = '?token=' + encodeURIComponent(token) + '&providerId=' + '&gameId=' =
 encodeURIComponent(providerId); %>
 <iframe src="<%= iframeSrc + queryParams %>"></iframe>
 ```
@@ -150,6 +152,7 @@ This endpoint allows the user to cash out a specified amount from their balance.
 **Request Body:**
 
 - `amount`: The amount to cash out
+- `gameId`: Target game 
 
 **Response:**
 
@@ -175,6 +178,7 @@ This endpoint allows the user to cash in a specified amount to their balance.
 **Request Body:**
 
 - `amount`: The amount to cash in
+- `gameId`: Target game 
 
 **Response:**
 
