@@ -50,43 +50,6 @@ const jwtToken = jwt.sign(payload, JWT_SECRET);
 const token = await encryptMessage(PUBLIC_KEY, jwtToken);
 ```
 
-### Middleware for Validating Incoming JWT Token
-
-```js
-async function verifyToken(req, res, next) {
-  try {
-    const token = req.headers["authorization"];
-    if (!token) {
-      res.status(403).json({ error: "AUTHENTICATION_FAILED" });
-      return;
-    }
-
-    const payload = jwt.verify(token, JWT_SECRET);
-    const user = await getUserByToken(payload.userId);
-    if (!user) {
-      res.status(403).json({ error: "AUTHENTICATION_FAILED" });
-      return;
-    }
-
-    const iat = payload.iat;
-    const issueDate = new Date(iat);
-    const currentDate = new Date();
-    const differenceInTime = currentDate.getTime() - issueDate.getTime();
-    const differenceInDays = differenceInTime / (1000 * 3600 * 24);
-
-    if (differenceInDays > 2) {
-      res.status(403).json({ error: "AUTHENTICATION_FAILED" });
-      return;
-    }
-
-    req.user = user;
-    next();
-  } catch (error) {
-    console.log("error:", error);
-    res.status(400).json({ error: "user not found" });
-  }
-}
-```
 
 The game provider API expects a status code of 403 if authentication fails.
 
