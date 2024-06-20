@@ -153,6 +153,8 @@ This endpoint allows the user to cash out a specified amount from their balance.
 
 - `amount`: The amount to cash out
 - `gameId`: Target game 
+- `transactionId`: unique transaction identifier of particular cash out
+- `roundId`: game round id
 
 **Response:**
 
@@ -179,6 +181,9 @@ This endpoint allows the user to cash in a specified amount to their balance.
 
 - `amount`: The amount to cash in
 - `gameId`: Target game 
+- `reason`: REVERSE_FUND, WIN, FREEBET 
+- `transactionId`: current transaction unique identifier
+- `previousTransactionId`: Identifier of the previous transaction, used to reference a bet being cashed out
 
 **Response:**
 
