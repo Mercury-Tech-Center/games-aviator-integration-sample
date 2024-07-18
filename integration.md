@@ -68,9 +68,9 @@ const data = {
   token: hash,
   // required.
   providerId: PROVIDER_ID,
-  // optional
+  // optional. (Default Georgian)
   language: "GE",
-  // optional
+  // optional. (Default GEL)
   currency: "GEL",
   // required.
   gameId: 1,
