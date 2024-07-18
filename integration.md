@@ -50,7 +50,6 @@ const jwtToken = jwt.sign(payload, JWT_SECRET);
 const token = await encryptMessage(PUBLIC_KEY, jwtToken);
 ```
 
-
 The game provider API expects a status code of 403 if authentication fails.
 
 ## Authentication (Game Provider Side)
@@ -61,25 +60,27 @@ The game provider sends the decrypted JWT token using the Authorization header b
 
 Once the JWT is encrypted on the provider API side, pass the generated front URL, token, provider ID, language, gameId to the game front-end application as query parameters.
 
-### Sample Code
+### Paramters that needs to be passed as query params down to IFRAME
 
 ```js
 const data = {
-  iframeSrc: FRONT_URL,
+  // required.
   token: hash,
+  // required.
   providerId: PROVIDER_ID,
+  // optional
   language: "GE",
-  currency:"GEL",
-  gameId: 1
+  // optional
+  currency: "GEL",
+  // required.
+  gameId: 1,
 };
 
-res.render("index", data);
-```
+<iframe
+  allow="clipboard-read; clipboard-write; fullscreen"
+  src="https://<FRONT_APP_DOMAIN>?token=<>&providerId=<>&currency=<>&language=<>"
+></iframe>;
 
-```html
-<% let queryParams = '?token=' + encodeURIComponent(token) + '&providerId=' + '&gameId=' =
-encodeURIComponent(providerId); %>
-<iframe src="<%= iframeSrc + queryParams %>"></iframe>
 ```
 
 ## Endpoints
@@ -115,7 +116,7 @@ This endpoint allows the user to cash out a specified amount from their balance.
 **Request Body:**
 
 - `amount`: The amount to cash out
-- `gameId`: Target game 
+- `gameId`: Target game
 - `transactionId`: unique transaction identifier of particular cash out
 - `roundId`: game round id
 
@@ -143,8 +144,8 @@ This endpoint allows the user to cash in a specified amount to their balance.
 **Request Body:**
 
 - `amount`: The amount to cash in
-- `gameId`: Target game 
-- `reason`: REVERSE_FUND, WIN, FREEBET 
+- `gameId`: Target game
+- `reason`: REVERSE_FUND, WIN, FREEBET
 - `roundId`: game round id
 - `transactionId`: current transaction unique identifier
 - `previousTransactionId`: Identifier of the previous transaction, used to reference a bet being cashed out
