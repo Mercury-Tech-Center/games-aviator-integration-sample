@@ -64,15 +64,15 @@ Once the JWT is encrypted on the provider API side, pass the generated front URL
 
 ```js
 const data = {
-  // required.
+  // required. Type String
   token: hash,
-  // required.
+  // required. Type String
   providerId: PROVIDER_ID,
-  // optional. (Default ka, uses ISO 639-1 format. available options are ka, en)
+  // optional. Type String. (Default ka, uses ISO 639-1 format. available options are ka, en)
   language: "ka", 
-  // optional. (Default GEL, uses ISO 4217 format. available options are GEL, USD)
+  // optional. Type String. (Default GEL, uses ISO 4217 format. for example USD)
   currency: "GEL",
-  // required.
+  // required. Type Int.
   gameId: 1,
 };
 
