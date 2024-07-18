@@ -78,7 +78,7 @@ const data = {
 
 <iframe
   allow="clipboard-read; clipboard-write; fullscreen"
-  src="https://<FRONT_APP_DOMAIN>?token=<>&providerId=<>&currency=<>&language=<>"
+  src="https://<FRONT_APP_DOMAIN>?token=<>&providerId=<>&currency=<>&language=<>&gameId=<>"
 ></iframe>;
 
 ```
