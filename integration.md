@@ -70,9 +70,9 @@ const data = {
   providerId: PROVIDER_ID,
   // optional. Type String. (Default ka, uses ISO 639-1 format. available options are ka, en)
   language: "ka", 
-  // optional. Type String. (Default GEL, uses ISO 4217 format. for example USD)
+  // optional. Type String. (Default GEL, uses ISO 4217 format. for example USD), language is users' preffered language
   currency: "GEL",
-  // required. Type Int.
+  // required. Type Int. (Currency in which user makes bets)
   gameId: 1,
 };
 
