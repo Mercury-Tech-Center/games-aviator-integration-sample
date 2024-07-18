@@ -68,9 +68,9 @@ const data = {
   token: hash,
   // required.
   providerId: PROVIDER_ID,
-  // optional. (Default Georgian)
-  language: "GE",
-  // optional. (Default GEL)
+  // optional. (Default ka, uses ISO 639-1 format. available options are ka, en)
+  language: "ka", 
+  // optional. (Default GEL, uses ISO 4217 format. available options are GEL, USD)
   currency: "GEL",
   // required.
   gameId: 1,
