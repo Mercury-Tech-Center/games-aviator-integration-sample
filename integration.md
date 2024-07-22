@@ -119,6 +119,8 @@ This endpoint allows the user to cash out a specified amount from their balance.
 - `gameId`: Target game
 - `transactionId`: unique transaction identifier of particular cash out
 - `roundId`: game round id
+- `language`: Identifier of language used by provider website
+- `currency`: Identifier of currency used by provider website
 
 **Response:**
 
@@ -149,6 +151,8 @@ This endpoint allows the user to cash in a specified amount to their balance.
 - `roundId`: game round id
 - `transactionId`: current transaction unique identifier
 - `previousTransactionId`: Identifier of the previous transaction, used to reference a bet being cashed out
+- `language`: Identifier of language used by provider website
+- `currency`: Identifier of currency used by provider website
 
 **Response:**
 
