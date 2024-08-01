@@ -9,7 +9,6 @@ All API requests require authentication to ensure that only authorized providers
 ### Authentication token generation (Node JS Example)
 
 ```js
-
 const crypto = require("crypto");
 
 const PUBLIC_KEY = `-----BEGIN PUBLIC KEY-----
@@ -126,7 +125,7 @@ This endpoint allows providers to add freebets to an existing campaign. Freebets
 }
 ```
 
-- **playerIds**: A list of player IDs to whom the freebets will be granted. Maximum 5000 player IDs per request.
+- **playerIds**: A list of player IDs to whom the freebets will be granted. Maximum 1000 player IDs per request.
 - **validityDate**: The date until which the freebets are valid, in ISO 8601 date format.
 - **count**: The number of freebets to be granted to each player.
 - **minMultiplier**: The minimum target multiplier required for the freebet to be cashed out.
@@ -172,7 +171,7 @@ This endpoint retrieves the active freebets created by the current provider. It 
 - **limit**: The number of items per page (required).
 
 **Response:**
-Returns a list of active freebets created by the current provider.
+Returns a list of active freebets created by the current provider. Max Limit of 1000 records
 
 ```json
 {
@@ -198,15 +197,31 @@ This endpoint allows the provider to revoke access to player freebets in the cur
 
 **Request Body:**
 
+1. Revoke Entire Campaign. Required
+
 ```json
 {
-  "playerIds": ["1", "2", "3"],
-  "isFullRevoke": false,
+  "isFullRevoke": false
+}
+```
+
+2. Revoke bulk freebets with request ID. Required
+
+```json
+{
   "requestId": "4497348f-818f-44d9-bc19-1d138bb20524"
 }
 ```
 
-- **playerIds**: A list of player IDs whose freebets are to be revoked.
+4. Revoke bulk freebets with player Ids. Required (Max 1000)
+
+```json
+{
+  "playerIds": ["1", "2", "3"]
+}
+```
+
+- **playerIds**: A list of player IDs whose freebets are to be revoked
 - **isFullRevoke**: A boolean indicating whether to revoke the entire campaign.
 - **requestId**: The unique identifier of the revoke request.
 
