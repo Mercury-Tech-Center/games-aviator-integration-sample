@@ -1,4 +1,4 @@
-# Freebets API Documentation
+# Freebets API Documentation v1.1
 
 ### Authentication
 
