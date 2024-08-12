@@ -128,7 +128,8 @@ This endpoint allows providers to add freebets to an existing campaign. Freebets
   "count": 1,
   "minMultiplier": 1.25,
   "betNominal": 2.25,
-  "requestId": "8ced1e2f-78ea-4491-91ea-22916ed054d1"
+  "requestId": "8ced1e2f-78ea-4491-91ea-22916ed054d1",
+  "currency": "USD"
 }
 ```
 
@@ -138,9 +139,10 @@ This endpoint allows providers to add freebets to an existing campaign. Freebets
 - **minMultiplier**: The minimum target multiplier required for the freebet to be cashed out.
 - **betNominal**: The nominal value of each freebet.
 - **requestId**: A unique identifier for the bulk freebet creation request.
+- **currency**: Currency, ISO 4217 format. Example USD
 
 - Note: all parameters are required.
-- Note: The accepted minimum value for minMultiplier is 1.00. The maximum value is defined by the provider.
+- Note: The accepted minimum value for minMultiplier is 1.01. The maximum value is defined by the provider.
 - Note: betNominal should be within the range of minBet and maxBet, which are defined as configuration parameters during the provider's setup.
 
 **Response:**
