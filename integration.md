@@ -69,7 +69,7 @@ const data = {
   // required. Type String
   providerId: PROVIDER_ID,
   // optional. Type String. (Default ka, uses ISO 639-1 format. options are ka, en)
-  language: "ka", 
+  language: "ka",
   // optional. Type String. (Default GEL, uses ISO 4217 format. for example USD)
   currency: "GEL",
   // required. Type Int.
@@ -80,8 +80,25 @@ const data = {
   allow="clipboard-read; clipboard-write; fullscreen"
   src="https://<FRONT_APP_DOMAIN>?token=<>&providerId=<>&currency=<>&language=<>&gameId=<>"
 ></iframe>;
-
 ```
+
+- Note on Token Handling
+  Since the authentication token is generated using the provider's public key, it may contain special characters. When passing this token through the front end as part of a URL, it’s crucial to encode URI parameters to ensure the token is correctly transmitted. This can be done using the encodeURIComponent function.
+
+Example:
+
+```js
+const url = `${FRONT_URL}?token=${encodeURIComponent(
+  TOKEN
+)}&providerId=${PROVIDER_ID}&currency=GEL&language=en`;
+```
+
+1. Token Encoding: The TOKEN is encoded using encodeURIComponent to safely include it in the URL, preventing issues with special characters.
+
+2. Provider ID, Currency, and Language: Additional parameters like providerId, currency, and language are appended to the URL as needed.
+
+Reference: For more details on encoding URI components, see the MDN documentation.
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent
 
 ## Endpoints
 

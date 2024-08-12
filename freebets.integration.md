@@ -1,16 +1,23 @@
 # Freebets API Documentation
 
-## Authentication
+### Authentication
 
-### Overview
+All API requests must include authentication to ensure that only authorized providers can access and modify data. This is achieved by including specific headers in every API request.
 
-All API requests require authentication to ensure that only authorized providers can access and modify data. Authentication is handled via headers that need to be included in every API request.
+#### Authentication Token Generation
 
-### Authentication token generation (Node JS Example)
+To access the Freebets API, providers must generate an authentication token by encoding a timestamp value using their public key. This token will be used to authenticate the request.
+
+Note: The timestamp is included in the token to handle expiration, ensuring that the token is only valid for a specific period.
+
+### Node.js Example
+
+The following example demonstrates how to generate the required authentication token using Node.js:
 
 ```js
 const crypto = require("crypto");
 
+// Step 1: Retrieve the provider's public key (Example Key)
 const PUBLIC_KEY = `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyuJohz5bY4sdIMEs/SZj
 YtpR7tuXD6Owb1DntJxDlqgB610ipf9CSgxRRnwuZJ5pDAznyCwRQxghrx0MEr+j
@@ -19,11 +26,14 @@ zpRRhN5Ztp09QRA7LvDJY/mKblp9yzu2TnrlszVc8t/wohEw3SGvoUJk8srz6q+9
 4XEhdHoiRFjBGftqNGFC7AKPI8UkIyYf+E8BsOEpzjIQYEOHpiujw/zfgBKpesJK
 iSffuYhOVpvLEaTddchopE7KZ7k3/1hbODydWLkP8kdXqStj8Li23+6Whf6H6Idu
 kQIDAQAB
------END PUBLIC KEY-----
-`;
+-----END PUBLIC KEY-----`;
 
-const PROVIDERID = "66570824f6f0265284c51421";
+// Step 2: Define the JSON payload that includes a timestamp
+const payload = {
+  timestamp: new Date().getTime(),
+};
 
+// Step 3: Encrypt the message using the provider's public key
 async function encryptMessage(publicKey, message) {
   try {
     const bufferMessage = Buffer.from(message, "utf8");
@@ -41,13 +51,10 @@ async function encryptMessage(publicKey, message) {
   }
 }
 
-const payload = {
-  // timestamp defined by provider
-  timestamp: new Date().getTime(),
-};
-
+// Step 4: Generate the authentication token
 encryptMessage(PUBLIC_KEY, JSON.stringify(payload)).then((token) => {
-  console.log("TOKEN:", token);
+  console.log("Generated Authentication Token:", token);
+  // Use this token to access the Freebets API
 });
 ```
 
@@ -131,6 +138,10 @@ This endpoint allows providers to add freebets to an existing campaign. Freebets
 - **minMultiplier**: The minimum target multiplier required for the freebet to be cashed out.
 - **betNominal**: The nominal value of each freebet.
 - **requestId**: A unique identifier for the bulk freebet creation request.
+
+- Note: all parameters are required.
+- Note: The accepted minimum value for minMultiplier is 1.00. The maximum value is defined by the provider.
+- Note: betNominal should be within the range of minBet and maxBet, which are defined as configuration parameters during the provider's setup.
 
 **Response:**
 
